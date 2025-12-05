@@ -2,8 +2,7 @@
   - Pour modifier la longueur du réacteur : modifier la variable "L" dans main.c & prob.c
   - Pour modifier la discrétisation spatiale : modifier la variable "m" dans main.c en respectant l'équation pour les m tels que mod8 = 1 (e.g:9,17,81,505)
 ## m = 505
-![Img](projet_final_m505.png)
-![Img](projet_final_m505_suite.png)
+![Img](projetfinalm505.png)
 
 ## Licenses
 Ce projet utilise plusieurs bibliothèques numériques externes. Les informations de licence suivantes sont fournies afin d'assurer la conformité et d'attribuer correctement chaque composant.
