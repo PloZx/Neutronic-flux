@@ -1,7 +1,0 @@
-*.o
-*.a
-*.so
-*.mod
-.idea
-.settings
-.venv
