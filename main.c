@@ -4,7 +4,6 @@
 #include "prob.h"
 #include "time.h"
 #include "interface_primme.h"
-#include "print_csr.h"
 #include "norme_residu.h"
 #include "eulerp_vec.h"
 #include <math.h>
@@ -13,20 +12,18 @@
 #include <stdint.h>
 #include "CtoFortran.h"
 
-typedef long long fint;
-
 
 int main(int argc, char *argv[])
 {
   /* déclarer les variables */
 
-  int m = 505, nev = 1;
+  int m = 81, nev = 1;
   int n, *ia, *ja; 
   double *a;
   double *evals, *evecs, *resNorms, *phi_t, *evals_ar, *evecs_ar;
   double tc1, tc2, tw1, tw2;
   double alpha = sqrt(5.85/2.00);
-  double L = 4.0;
+  double L = 2.0;
   double h = (L / (m - 1)) * alpha;
 
   /* générer le problème */
@@ -59,26 +56,23 @@ int main(int argc, char *argv[])
      return 1;
   tc2 = mytimer_cpu(); tw2 = mytimer_wall();
 
-  /* ARPACK - résolution, désactivée pour les cas où m est trop grand car trop lent*/
-  //arpack_sym_csr_eigs(n, ia, ja, a, nev, "SA", 10000, 0, evals_ar, evecs_ar);
-
   /* Conversion -> triang sup Fortran */
 
-  fint *IA_J = NULL;
-  fint *JA_J = NULL;
+  int *IA_J = NULL;
+  int *JA_J = NULL;
   double *A_J = NULL;
-  fint NNZ_F = 0;
+  int NNZ_F = 0;
   if (csrC_to_upperCSRFortran(n, ia, ja, a,&IA_J, &JA_J, &A_J, &NNZ_F) != 0) {
 	  fprintf(stderr, "Erreur conversion CSR -> Fortran\n");
       return 1;
 }
-  fint N = (fint)n;
-  fint NEIG = 1;          // on veut 1 valeur propre
-  fint MAXEIG = NEIG;     // comme dans l’exemple Fortran
-  fint MAXSP  = 20;       // espace de Krylov
+  int N = (int)n;
+  int NEIG = 1;          // on veut 1 valeur propre
+  int MAXEIG = NEIG;     // comme dans l’exemple Fortran
+  int MAXSP  = 20;       // espace de Krylov
 
   // LX = N*(3*MAXSP + MAXEIG + 1) + 4*MAXSP*MAXSP
-  fint LX = N * (3*MAXSP + MAXEIG + 1) + 4*MAXSP*MAXSP;
+  int LX = N * (3*MAXSP + MAXEIG + 1) + 4*MAXSP*MAXSP;
 
   double *EIGS_J = malloc((size_t)MAXEIG * sizeof(double));
   double *RES_J  = malloc((size_t)MAXEIG * sizeof(double));
@@ -92,18 +86,18 @@ int main(int argc, char *argv[])
 
   // paramètres de contrôle (d’après la doc JADAMILU)
   double SIGMA   = 2.0;
-  fint   ISEARCH = 1; // REMARQUE IMPORTANTE : Ici j'utilise le fait que j'ai une idée de la valeur propre la plus petite (à peu près 2) si on s'éloigne pas trop non plus des dimensions stationnaires du réacteur.
-  fint   NINIT   = 0;
-  fint   MADSPACE = MAXSP;
-  fint   ITER    = 1000;
-  double TOL     = 1e-6;
+  int   ISEARCH = 0; // REMARQUE IMPORTANTE : Ici j'utilise le fait que j'ai une idée de la valeur propre la plus petite (à peu près 2) si on s'éloigne pas trop non plus des dimensions stationnaires du réacteur.
+  int   NINIT   = 0;
+  int   MADSPACE = MAXSP;
+  int   ITER    = 1000;
+  double TOL     = 1e-8;
   double SHIFT   = 2.0;
   double DROPTOL = 1e-3;
-  double MEM     = 20.0;
+  double MEM     = 10.0;
 
-  fint ICNTL[5] = {0,0,1,0,0};
-  fint IPRINT   = 6;
-  fint INFO     = 0;
+  int ICNTL[5] = {0,0,0,0,0}; // Choix pour ICNTL(3) = 1
+  int IPRINT   = 6;
+  int INFO     = 0;
   double GAP    = 0.0;
 
   /* Appel JADAMILU*/

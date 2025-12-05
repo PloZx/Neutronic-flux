@@ -36,7 +36,7 @@ int prob(int m, int *n, int **ia, int **ja, double **a)
 */
 {
     int  nnz = 0, ix, iy, nx, ind, compteur = 0;
-    double invh2, h = 0, alpha = sqrt(5.85/2.00), L = 4.0;
+    double invh2, h = 0, alpha = sqrt(5.85/2.00), L = 2.0;
     nx = m - 2; /* nœuds de Dirichlet ne sont pas pris en compte */
     h = (L/(m-1))*alpha; /* Pas de discretisation */
     invh2 = (m-1)*(m-1)/(L*L*alpha*alpha); /* h^-2 pour L=2 */

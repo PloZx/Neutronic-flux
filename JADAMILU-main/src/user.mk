@@ -13,10 +13,10 @@
 # PLATFORM=INT32GNU
 
 # 64 BIT gcc/gfortran linux system on INTEL architectures
-# PLATFORM=INT64NGNU
+PLATFORM=INT64NGNU
 
 # 64 BIT gcc/gfortran linux system with 64 bit integer on INTEL architectures
-PLATFORM=INT64YGNU
+# PLATFORM=INT64YGNU
 
 # 32 BIT gcc/gfortran linux system on AMD architectures
 # PLATFORM=OPT32GNU
